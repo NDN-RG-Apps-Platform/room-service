@@ -1,0 +1,38 @@
+{
+    "port": 8002,
+    "appName": "room-service",
+    "appEnv": "local",
+    "signatureKey": "",
+    "database": {
+        "host": "localhost",
+        "port": 5432,
+        "name": "room_services",
+        "username": "root",
+        "password": "ndnRG@123",
+        "maxOpenConnection": 10,
+        "maxLifeTimeConnection": 10,
+        "maxIdleConnection": 10,
+        "maxIdleTime": 10
+    },
+    "rateLimiterMaxRequest": 1000,
+    "rateLimiterTimeSecond": 60,
+    "internalService" : {
+        "user": {
+            "host": "http://localhost:8001",
+            "signatureKey": ""
+        }
+    },
+    "gcsType": "",
+    "gcsProjectID": "",
+    "gcsPrivateKeyID": "",
+    "gcsPrivateKey": "",
+    "gcsClientEmail": "",
+    "gcsClientID": "",
+    "gcsAuthUri": "",
+    "gcsTokenUri": "",
+    "gcsAuthProviderX509CertUrl": "",
+    "gcsClientX509CertUrl": "",
+    "gcsUniversetyDomain": "",
+    "gcsBucketName": ""
+}
+

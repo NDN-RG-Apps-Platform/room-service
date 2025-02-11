@@ -45,8 +45,9 @@ type RoomDetailResponse struct {
 }
 
 type RoomRequestParam struct {
-	Page      int     `json:"page" validates:"required"`
-	Limit     int     `json:"limit" validates:"required"`
-	SortOrder *string `json:"sortOrder"`
-	SetOrder  *string `json:"setOrder"`
+	Page       int     `json:"page" validates:"required"`
+	Limit      int     `json:"limit" validates:"required"`
+	SortColumn *string `json:"sortColumn"`
+	SortOrder  *string `json:"sortOrder"`
+	SetOrder   *string `json:"setOrder"`
 }

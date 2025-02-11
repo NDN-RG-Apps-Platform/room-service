@@ -8,7 +8,7 @@ import (
 )
 
 type RoomScheduleRequest struct {
-	RoomID string `json:"ROomID" validate:"required"`
+	RoomID string `json:"RoomID" validate:"required"`
 	Date   string `json:"date" validate:"required"`
 	TimeID string `json:"timeIDs" validate:"required"`
 }
@@ -46,10 +46,11 @@ type RoomScheduleBookingResponse struct {
 }
 
 type RoomScheduleRequestParam struct {
-	Page      int     `json:"page" validates:"required"`
-	Limit     int     `json:"limit" validates:"required"`
-	SortOrder *string `json:"sortOrder"`
-	SetOrder  *string `json:"setOrder"`
+	Page       int     `json:"page" validates:"required"`
+	Limit      int     `json:"limit" validates:"required"`
+	SortColumn *string `json:"sortColumn"`
+	SortOrder  *string `json:"sortOrder"`
+	SetOrder   *string `json:"setOrder"`
 }
 
 type RoomScheduleByRoomIDAndDateRequestParam struct {

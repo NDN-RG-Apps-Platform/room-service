@@ -1,6 +1,9 @@
 package util
 
 import (
+	"crypto/sha256"
+	"encoding/hex"
+	"math"
 	"os"
 	"reflect"
 	"strconv"
@@ -8,6 +11,61 @@ import (
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
+
+type PaginationParam struct {
+	Count int64       `json:"count"`
+	Page  int         `json:"page"`
+	Limit int         `json:"limit"`
+	Data  interface{} `json:"data"`
+}
+
+type PaginationResult struct {
+	TotalPage int         `json:"totalPage"`
+	TotalData int64       `json:"totalData"`
+	NextPage  *int        `json:"nextPage"`
+	PrevPage  *int        `json:"prevPage"`
+	Page      int         `json:"page"`
+	Limit     int         `json:"limit"`
+	Data      interface{} `json:"data"`
+}
+
+func GeneratePagination(params PaginationParam) PaginationResult {
+	totalPage := int(math.Ceil(float64(params.Count) / float64(params.Limit)))
+
+	var (
+		nextPage int
+		PrevPage int
+	)
+
+	if params.Page < totalPage {
+		nextPage = params.Page + 1
+	}
+
+	if params.Page > 1 {
+		PrevPage = params.Page - 1
+	}
+
+	result := PaginationResult{
+		TotalPage: totalPage,
+		TotalData: params.Count,
+		NextPage:  &nextPage,
+		PrevPage:  &PrevPage,
+		Page:      params.Page,
+		Limit:     params.Limit,
+		Data:      params.Data,
+	}
+
+	return result
+}
+
+func GenerateSHA256(inputString string) string {
+	hash := sha256.New()
+	hash.Write([]byte(inputString))
+	hashedBytes := hash.Sum(nil)
+	hashedString := hex.EncodeToString(hashedBytes)
+
+	return hashedString
+}
 
 func BindFromJSON(dest any, filename, path string) error {
 	v := viper.New()

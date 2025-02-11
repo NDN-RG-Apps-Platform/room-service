@@ -2,8 +2,8 @@ package response
 
 import (
 	"net/http"
-	"user-service/constants"
-	errConstant "user-service/constants/error"
+	"room-service/constants"
+	errConstant "room-service/constants/error"
 
 	"github.com/gin-gonic/gin"
 )

@@ -8,9 +8,9 @@ import (
 )
 
 type RoomScheduleRequest struct {
-	RoomID string `json:"RoomID" validate:"required"`
-	Date   string `json:"date" validate:"required"`
-	TimeID string `json:"timeIDs" validate:"required"`
+	RoomID  string   `json:"RoomID" validate:"required"`
+	Date    string   `json:"date" validate:"required"`
+	TimeIDs []string `json:"timeIDs" validate:"required"`
 }
 
 type GenerateRoomScheduleForOneMostRequest struct {
@@ -22,24 +22,26 @@ type UpdateRoomScheduleRequest struct {
 	TimeID string `json:"timeID" validate:"required"`
 }
 
-type UpdateStatusRoomRequest struct {
+type UpdateStatusRoomScheduleRequest struct {
 	RoomScheduleIDs []string `json:"roomScheduleIDs" validate:"required"`
 }
 
 type RoomScheduleResponse struct {
-	UUID        uuid.UUID                    `json:"uuid"`
-	RoomName    string                       `json:"roomName"`
-	Capacity    string                       `json:"capacity"`
-	Description string                       `json:"description"`
-	Date        string                       `json:"date"`
-	Status      constants.RoomScheduleStatus `json:"status"`
-	CreatedAt   time.Time                    `json:"createdAt"`
-	UpdatedAt   time.Time                    `json:"updatedAt"`
+	UUID        uuid.UUID                        `json:"uuid"`
+	RoomName    string                           `json:"roomName"`
+	Capacity    string                           `json:"capacity"`
+	Description string                           `json:"description"`
+	Date        string                           `json:"date"`
+	Status      constants.RoomScheduleStatusName `json:"status"`
+	Time        string                           `json:"time"`
+	CreatedAt   time.Time                        `json:"createdAt"`
+	UpdatedAt   time.Time                        `json:"updatedAt"`
 }
 
-type RoomScheduleBookingResponse struct {
+type RoomScheduleForBookingResponse struct {
 	UUID        uuid.UUID                        `json:"uuid"`
 	Date        string                           `json:"date"`
+	Capacity    string                           `json:"capacity"`
 	Description string                           `json:"description"`
 	Status      constants.RoomScheduleStatusName `json:"status"`
 	Time        string                           `json:"time"`

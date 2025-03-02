@@ -27,7 +27,7 @@ type ServiceAccountKeyJSON struct {
 	UniverseDomain          string `json:"universe_domain"`
 }
 
-type GCSClient struct {
+type IGCSClient struct {
 	ServiceAccountKeyJSON ServiceAccountKeyJSON
 	BucketName            string
 }
@@ -36,14 +36,14 @@ type IGCS interface {
 	UploadFile(context.Context, string, []byte) (string, error)
 }
 
-func NewGCSClient(serviceAccountKeyJSON ServiceAccountKeyJSON, bucketName string) *GCSClient {
-	return &GCSClient{
+func NewIGCSClient(serviceAccountKeyJSON ServiceAccountKeyJSON, bucketName string) *IGCSClient {
+	return &IGCSClient{
 		ServiceAccountKeyJSON: serviceAccountKeyJSON,
 		BucketName:            bucketName,
 	}
 }
 
-func (g *GCSClient) createClient(ctx context.Context) (*storage.Client, error) {
+func (g *IGCSClient) createClient(ctx context.Context) (*storage.Client, error) {
 	reqBodyBytes := new(bytes.Buffer)
 	err := json.NewEncoder(reqBodyBytes).Encode(g.ServiceAccountKeyJSON)
 	if err != nil {
@@ -60,7 +60,7 @@ func (g *GCSClient) createClient(ctx context.Context) (*storage.Client, error) {
 	return client, nil
 }
 
-func (g *GCSClient) UploadFile(ctx context.Context, fileName string, file []byte) (string, error) {
+func (g *IGCSClient) UploadFile(ctx context.Context, fileName string, file []byte) (string, error) {
 	var (
 		contentType      = "application/octet-stream"
 		timeoutInSeconds = 60

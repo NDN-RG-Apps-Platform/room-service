@@ -15,7 +15,7 @@ type RoomRequest struct {
 	Image       []multipart.FileHeader `json:"image" validate:"required"`
 }
 
-type UpdateFieldRequest struct {
+type UpdateRoomRequest struct {
 	Name        string                 `json:"name" validate:"required"`
 	Code        string                 `json:"code" validate:"required"`
 	Capacity    string                 `json:"capacity" validate:"required"`

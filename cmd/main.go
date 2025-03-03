@@ -1,8 +1,11 @@
 package cmd
 
 import (
+	"encoding/base64"
 	"fmt"
 	"net/http"
+	"room-service/clients"
+	"room-service/common/gcs"
 	"room-service/common/response"
 	"room-service/config"
 	"room-service/constants"
@@ -39,16 +42,18 @@ var commad = &cobra.Command{
 		time.Local = loc
 
 		err = db.AutoMigrate(
-			&models.Users{},
-			&models.Roles{},
-			&models.Libraries{},
+			&models.Room{},
+			&models.RoomSchedule{},
+			&models.Time{},
 		)
 		if err != nil {
 			panic(err)
 		}
 
-		repository := repositories.NewRespositoryRegistry(db)
-		service := services.NewServiceRegistry(repository)
+		gcs := initGCS()
+		client := clients.NewClientRegistry()
+		repository := repositories.NewRepositoryRegistry(db)
+		service := services.NewServiceRegistry(repository, gcs)
 		controller := controllers.NewControllerRegistry(service)
 
 		router := gin.Default()
@@ -83,7 +88,7 @@ var commad = &cobra.Command{
 		router.Use(middlewares.RateLimiter(lmt))
 
 		group := router.Group("/api/v1")
-		route := routes.NewRouteRegistry(controller, group)
+		route := routes.NewRouteRegistry(controller, group, client)
 		route.Serve()
 
 		port := fmt.Sprintf(":%d", config.Config.Port)
@@ -96,4 +101,30 @@ func Run() {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func initGCS() gcs.IGCSClient {
+	decode, err := base64.StdEncoding.DecodeString(config.Config.GcsPrivateKey)
+	if err != nil {
+		panic(err)
+	}
+	stringPriviteKey := string(decode)
+	gcsServiceAccount := gcs.ServiceAccountKeyJSON{
+		Type:                    config.Config.GcsType,
+		ProjectID:               config.Config.GcsProjectID,
+		PrivateKeyID:            config.Config.GcsPrivateKeyID,
+		PrivateKey:              stringPriviteKey,
+		ClientEmail:             config.Config.GcsClientEmail,
+		ClientID:                config.Config.GcsClientID,
+		AuthURI:                 config.Config.GcsAuthUri,
+		TokenURI:                config.Config.GcsTokenURI,
+		AuthProviderX509CertUrl: config.Config.GcsAuthProviderX509CertUrl,
+		ClientX509CertUrl:       config.Config.GcsClientX509CertUrl,
+		UniverseDomain:          config.Config.GcsUniverseDomain,
+	}
+	gcsClient := gcs.NewGCSClient(
+		gcsServiceAccount,
+		config.Config.gcsBucketName,
+	)
+	return gcsClient
 }
